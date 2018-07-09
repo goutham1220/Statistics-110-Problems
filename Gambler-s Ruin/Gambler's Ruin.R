@@ -1,5 +1,8 @@
 library(ggplot2)
 
+# Statistics 110: Strategic Practice & Homework 3: 
+# https://projects.iq.harvard.edu/files/stat110/files/strategic_practice_and_homework_3.pdf
+
 # Problem: A gambler repeatedly plays a game where in each round, he wins a dollar with
 # probability 1/3 and loses a dollar with probability 2/3. His strategy is "quit
 # when he is ahead by $2," though some suspect he is a gambling addict anyway.
