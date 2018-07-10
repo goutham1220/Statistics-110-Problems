@@ -1,3 +1,10 @@
+---
+title: "Stat 110 Strategic Practice & Homework 3: Gambler's Ruin"
+output: pdf_document
+---
+
+##By Goutham Swaminathan
+
 #Link: (https://projects.iq.harvard.edu/files/stat110/files/strategic_practice_and_homework_3.pdf)
  
  #Problem
