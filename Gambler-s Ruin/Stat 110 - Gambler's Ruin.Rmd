@@ -1,5 +1,5 @@
 ---
-title: "Stat 110 Strategic Practice & Homework 3: Gambler's Ruin"
+title: 'Stat 110 Strategic Practice & Homework 3: Gambler''s Ruin'
 output: pdf_document
 ---
 
