@@ -3,10 +3,12 @@ title: "Statistics 110 Strategic Practice & Homework 1: Dice Problem"
 output: pdf_document
 ---
 
-#Problem
- library(ggplot2)
+##By Goutham Swaminathan
 
+#Link: (https://projects.iq.harvard.edu/files/stat110/files/strategic_practice_and_homework_1.pdf)
+ 
 #Problem 1
+
  Decide whether the blank should be filled in with =, <, or >, and give a short but clear explanation.
   * (probability that the total after rolling 4 fair dice is 21) ___ (probability that the total after rolling 4 fair dice is 22)
 
