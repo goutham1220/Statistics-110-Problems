@@ -1,14 +1,9 @@
 ---
-title: 'Stat 110 Strategic Practice & Homework 3: Gambler's Ruin'
+title: "Stat 110 Strategic Practice & Homework 3: Gambler's Ruin"
 output: pdf_document
 ---
 
-##By Goutham Swaminathan
-
-#Link: (https://projects.iq.harvard.edu/files/stat110/files/strategic_practice_and_homework_3.pdf)
- 
- #Problem
- 
+#Problem
  A gambler repeatedly plays a game where in each round, he wins a dollar with
  probability 1/3 and loses a dollar with probability 2/3. His strategy is "quit
  when he is ahead by $2," though some suspect he is a gambling addict anyway.
@@ -16,7 +11,6 @@ output: pdf_document
  he'll ever be ahead by $2 is less than 1/4.
 
 #Explanation
-
  This problem involves determining whether the probability of the gambler being ahead by $2 is less than 1/4. In order to solve this problem, we will need to do the following:
   1.  Simulate rounds in which the gambler either wins $1 or loses $1 randomly until he reaches $0 or $1,000,002.
   2.  Simulate the above process many times, and record the results of every game in a vector (1 for win, 0 for loss)
@@ -100,7 +94,5 @@ qplot(x = 1:length(results), y = results , geom = "point")
 If we input the number _78_, the resulting plot will show the gambler be ahead by 2. It is clear that the second plot shows significantly fewer rounds and this is due to the fact that it is much more probable for the gambler to be ahead by two after only a few rounds, rather than losing many rounds and then going all the way back to **maxValue** or _amt + 2_.
 
 #Conclusion
-
 Thank you for taking the time to read this explanation for the "Gambler's Ruin" problem from "Statistics 110: Strategic Practice & Homework 3", courtesy of Harvard University. Link: https://projects.iq.harvard.edu/files/stat110/files/strategic_practice_and_homework_3.pdf. This problem was taken from the public resources to the course and **is not my orginal work**. The explanation, however, is 100% original. Please feel free to visit my GitHub page at http://github.com/goutham1220 where I will be posting more explanations as well as other statistics and data science-related resources. In addition, please feel free to visit my YouTube channels "GSDataScience" (http://bit.ly/gsdatascience), where I will be posting more data science and statistics-related videos, and "Gooth" (http://youtube.com/gooth), where I post more cinematic-style, slice-of-life videos.    
-    
 
