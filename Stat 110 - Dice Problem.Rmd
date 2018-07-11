@@ -1,98 +1,80 @@
 ---
-title: "Stat 110 Strategic Practice & Homework 3: Gambler's Ruin"
+title: "Statistics 110 Strategic Practice & Homework 1: Dice Problem"
 output: pdf_document
 ---
 
 #Problem
- A gambler repeatedly plays a game where in each round, he wins a dollar with
- probability 1/3 and loses a dollar with probability 2/3. His strategy is "quit
- when he is ahead by $2," though some suspect he is a gambling addict anyway.
- Suppose that he starts with a million dollars. Show that the probability that
- he'll ever be ahead by $2 is less than 1/4.
+ library(ggplot2)
+
+#Problem 1
+ Decide whether the blank should be filled in with =, <, or >, and give a short but clear explanation.
+  * (probability that the total after rolling 4 fair dice is 21) ___ (probability that the total after rolling 4 fair dice is 22)
+
+```{r}
+sum1 = 21
+sum2 = 22
+iterations = 10000
+
+prob1 = mean(sumDies == sum1)
+prob2 = mean(sumDies == sum2)
+
+prob1 > prob2
+
+qplot(sumDies, geom = "histogram", bins = 22) +
+  annotate("text", x = sum1, y = -iterations/100, label = "*", size = 15, color = 5) +
+  annotate("text", x = sum2, y = -iterations/100, label = "*", size = 15, color = 4)
+
+subsetProb1 = vector()
+subsetProb2 = vector()
+
+for(i in 1:iterations){
+  subsetProb1[i] = mean(sumDies[1:i] == sum1)
+  subsetProb2[i] = mean(sumDies[1:i] == sum2)
+}
+
+ggplot(data.frame(subsetProb1), aes(x = 1:iterations)) + 
+  geom_line(aes(y=subsetProb1, color = 5)) +
+  geom_line(aes(y=subsetProb2, color = 4))
+```
 
 #Explanation
- This problem involves determining whether the probability of the gambler being ahead by $2 is less than 1/4. In order to solve this problem, we will need to do the following:
-  1.  Simulate rounds in which the gambler either wins $1 or loses $1 randomly until he reaches $0 or $1,000,002.
-  2.  Simulate the above process many times, and record the results of every game in a vector (1 for win, 0 for loss)
-  3.  Calculate the mean of the results vector in order to determine the actual probability 
- 
-```{r}
-iterations = 1000   #number of rounds
-amount = 300    #original balance
-resultCounts = vector()   #vector of results
-maxValue = amount + 2   #max value of amount before simulation ends
-```
-
-In order to accomplish the first step, we will need to initialize variables for his original balance and the number of iterations as shown above. In addition, we will need to create a vector to store the results of each simulation as well as a variable for the max value of amount, which . Although we could hard code these values, for the sake of proper convention, we will be creating variables to maximize customizability. The **amount** variable will be intialized to 300 because initializing it to 1,000,000 would increase the program runtime significantly. In addition, the **iterations** variable will be initialized to 1,000 because we want the number of iterations to be high but not too high such that the program takes too long to run. We will then initialize the **resultCounts** vector, which contains the results of every game, using the _vector()_ function. Finally, the **maxValue** variable will be assigned to _amount + 2_, which represents the boundary at which the gambler will be ahead by \$2.    
+ This problem involves determining whether the probability that the total summed values after rolling 4 fair dice is 21 is greater than, less than, or equal the probability that the total summed values after rolling 4 fair dice is 22. In order to solve this problem, we will need to do the following:
+  1.  Simulate _n_ iterations of 4 dice rolls and sum their values (n = 10,000)
+  2.  Calculate the means of the prob1 and prob2 vectors in order to determine the actual probabilities
+  3.  Compare the calculated probabilities to answer the original questions 
 
 ```{r}
-simulation = function(amt){
-  
-  amt = amt + sample(c(1, -1), 1, prob = c(1/3, 2/3))   #generates 1/-1 and adds to amt
-  
-  if(amt == maxValue){  #checks to see if the gambler is ahead
-    return(1)
-  } else if(amt == 0){  #checks to see if the gambler lost all money
-    return(0)
-  }
-  
-  return(simulation(amt))   #recursive call
-}
+sum1 = 21
+sum2 = 22
+iterations = 10000
 ```
 
-After initializing our variables, we can create our _simulation()_ function, which takes **amt**, or the amount, as a parameter. The simulation function first uses the _sample()_ function to generate either a 1 or a -1 depending on whether the gambler loses or wins a round. This is done randomly, and the _prob_ parameter allows us to modify the probability of winning and losing in order to stay in line with the problem. The resulting value is then added to the existing value of **amt** in order to reflect the change in the gambler's balance.  For every call of the _simulation()_ function, a check is performed to determine if the gambler's amount is ahead by 2 (using maxValue) or if he has lost all of his money. If either of these conditions holds true, the function returns a 1 or a 0 accordingly (these values will be used to determine the final probability). If the value of **amt** does not meet either of these conditions, it is used in a recursive call to the function.
+In order to accomplish the first step, we will need to initialize variables for the two sums we will be comparing and the number of iterations as shown above. Although we could hard code these values, for the sake of proper convention, we will be creating variables to maximize customizability. The **iterations** variable will be initialized to 10,000 because we want the number of iterations to be high but not too high such that the program takes too long to run.    
 
 ```{r}
-set.seed(6)
-for(i in 1:iterations){
-  resultCounts[i] = simulation(amount)
-}
-
-mean(resultCounts)
+die1 = sample(6, iterations, replace = TRUE)
+die2 = sample(6, iterations, replace = TRUE)
+die3 = sample(6, iterations, replace = TRUE)
+die4 = sample(6, iterations, replace = TRUE)
+sumDies = die1 + die2 + die3 + die4
 ```
 
-After creating the function, a loop is used to run _n_ iterations of the _simulation()_ function and assign the resulting output to the _i_ th index of the **resultCounts** vector. By looping this function _n_ times, we are essentially simulating _n_ games. In order to calculate the actual probability, we will need to run many games (in this case 1000), and see how many of those games the gambler actually wins (ends up with _amt + 2_ dollars). Finally, the _mean()_ function is used to calculate the probability of the gambler being ahead by \$2. Because every "win" is represented as a 1 and every "loss" is represented as a 0, calculating the mean of these results would yield the probability of the gambler being ahead by \$2. This holds true for any value of **amount** however, only large values will yield accurate results. This is because the smaller **amount** is, the more random variations dominate the results. After running the program multiple times, we can see that the calculated probability is, in fact, less than 1/4. Although the scope of the problem ends here, we will now write a function to track the results after every round and plot them.
+In addition, we will be creating 4 dice vectors to store the value for every iteration. For each **die** vector, we invoke the _sample_ function to generate _n_ values between 1 and 6 (_n_ being the # of iterations). Afterwards, we create a **sumDies** vector that stores the sum of **die1**, **die2**, **die3**, and **die4** for each round.
 
 ```{r}
-library(ggplot2)
-amountTrack = vector()
+prob1 = mean(sumDies == sum1)
+prob2 = mean(sumDies == sum2)
 ```
 
-Before writing the function, we first import the _ggplot2_ library so that we can plot our results later. We then initialize the **amountTrack** vector using the _vector()_ function.  
+Afterwards, the _mean()_ function is used to calculate the probability for each of the two sums. Inside of the _mean()_ function, we insert a logic condition to help determine the probability. Because the logic condition is evaluated for every index of the vector, the output will be a vector of TRUE and FALSE, which can also be represented as 1 and 0, respectively. As a result, the 1s represent when the sum of the dies equal the desired value (**sum1** and **sum2**) and 0s represent when they do not. This holds true for any value of **iterations** however, only larger numbers of iterations will yield accurate results. This is because the smaller the value of **iterations** is, the more random variations dominate the results. 
 
 ```{r}
-trackResults = function(amt, amtTrack){
-  
-  amt = amt + sample(c(1, -1), 1, prob = c(1/3, 2/3))   #generates 1/-1 and adds to amt
-  amtTrack = c(amtTrack, amt)   #adds new value of amt to amtTrack
-  if(amt == maxValue | amt == 0){   #boundary condition
-    return(amtTrack)
-    } 
-  return(trackResults(amt, amtTrack))
-}
+prob1 > prob2
 ```
 
-We then create the trackResults() function, which takes **amt**, or the amount, as well as the **amtTrack** vector, which tracks the amount after each call of the function. Similar to the _simulation()_ function, the _trackResults()_ function uses the _sample()_ function to randomly generate either a 1 or -1 with varying probability and adds that value to **amt**. We then set **amtTrack** to _c(amtTrack, amt)_, which concatenates the previous values of **amtTrack** and the current value of **amt**. Afterwards, we utilize an _if_ statement to determine whether **amt** has reached either boundary (maxValue or 0), in which case the function will return a vector with the values of amt. If **amt** has not reached either boundary value, the function will recursively call itself.   
+After running the program multiple times, we can see, through this simple logic statement, that the probability of the sum of 4 fair dice rolls being 21 is greater than the probability of the sum of 4 fair dice rolls being 22. Although the scope of the problem ends here, we will now write a function to track the results after every iteration and plot them.
 
-
-```{r}
-set.seed(2)
-results = trackResults(amount, amountTrack)
-qplot(x = 1:length(results), y = results , geom = "point")
-```
-
-After creating the function, we call it and assign the output to a **results** vector. We then use the _qplot()_ function to plot the number of rounds as X, and the value of **amt** as Y. 
-
-In order to easily view the two different plots this program can output, we must use the _set.seed()_ function to set the seed for our program. If we input the number _2_, the resulting plot will show the gambler as he loses all of his money.
-
-```{r}
-set.seed(78)
-results = trackResults(amount, amountTrack)
-qplot(x = 1:length(results), y = results , geom = "point")
-```
-
-If we input the number _78_, the resulting plot will show the gambler be ahead by 2. It is clear that the second plot shows significantly fewer rounds and this is due to the fact that it is much more probable for the gambler to be ahead by two after only a few rounds, rather than losing many rounds and then going all the way back to **maxValue** or _amt + 2_.
 
 #Conclusion
-Thank you for taking the time to read this explanation for the "Gambler's Ruin" problem from "Statistics 110: Strategic Practice & Homework 3", courtesy of Harvard University. Link: https://projects.iq.harvard.edu/files/stat110/files/strategic_practice_and_homework_3.pdf. This problem was taken from the public resources to the course and **is not my orginal work**. The explanation, however, is 100% original. Please feel free to visit my GitHub page at http://github.com/goutham1220 where I will be posting more explanations as well as other statistics and data science-related resources. In addition, please feel free to visit my YouTube channels "GSDataScience" (http://bit.ly/gsdatascience), where I will be posting more data science and statistics-related videos, and "Gooth" (http://youtube.com/gooth), where I post more cinematic-style, slice-of-life videos.    
+Thank you for taking the time to read this explanation for the dice problem from "Statistics 110: Strategic Practice & Homework 1", courtesy of Harvard University. Link: https://projects.iq.harvard.edu/files/stat110/files/strategic_practice_and_homework_1.pdf. This problem was taken from the public resources to the course and **is not my orginal work**. The explanation, however, is 100% original. Please feel free to visit my GitHub page at http://github.com/goutham1220 where I will be posting more explanations as well as other statistics and data science-related resources. In addition, please feel free to visit my YouTube channels "GSDataScience" (http://bit.ly/gsdatascience), where I will be posting more data science and statistics-related videos, and "Gooth" (http://youtube.com/gooth), where I post more cinematic-style, slice-of-life videos.    
 

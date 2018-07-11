@@ -1,8 +1,10 @@
 library(ggplot2)
+
 #Problem 1
+# decide whether the blank should be filled in with =, <, or >, and give a short but clear explanation.
 #(probability that the total after rolling 4 fair dice is 21)___(probability that the total after rolling 4 fair dice is 22)
 
-#add citation
+
 sum1 = 21
 sum2 = 22
 iterations = 10000
