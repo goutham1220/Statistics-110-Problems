@@ -1,12 +1,9 @@
 ---
 title: "Statistics 110 Strategic Practice & Homework 1: Dice Problem"
+author: "Goutham Swaminathan"
 output: pdf_document
 ---
 
-##By Goutham Swaminathan
-
-#Link: (https://projects.iq.harvard.edu/files/stat110/files/strategic_practice_and_homework_1.pdf)
- 
 #Problem 
 
  Decide whether the blank should be filled in with =, <, or >, and give a short but clear explanation.
@@ -19,6 +16,10 @@ output: pdf_document
   3.  Compare the calculated probabilities to answer the original questions  
   
 In order to accomplish the first step, we will need to initialize variables for the two sums we will be comparing and the number of iterations as shown above. 
+
+```{r setup, echo=FALSE} 
+options(width=80)
+``` 
 
 ```{r}
 sum1 = 21
@@ -49,10 +50,10 @@ c(prob1, prob2)
 
 We can see that the probability of the sum of 4 fair dice rolls being 21 is greater than the probability of the sum of 4 fair dice rolls being 22. Although the scope of the problem ends here, we will now track the results after every iteration and plot them.
 
-First, we will plot a histogram showing the frequency for the sum of 4 fair dice rolls between 1 and 25 using the _qplot()_ function. The \textcolor{teal}{teal} asterisk is used to denote when the sum is equal to 21 and the \textcolor{blue}{blue} asterisk is used to denote when the sum is equal to 22. 
+First, we will plot a histogram showing the frequency for the sum of 4 fair dice rolls between 1 and 25 using the _qplot()_ function. The teal asterisk is used to denote when the sum is equal to 21 and the blue asterisk is used to denote when the sum is equal to 22. 
 
 ```{r}
-set.seed(2)
+library(ggplot2)
 qplot(sumDies, geom = "histogram", bins = 22) +
   annotate("text", x = sum1, y = -iterations/100, label = "*", size = 15, color = 5) +
   annotate("text", x = sum2, y = -iterations/100, label = "*", size = 15, color = 4)
@@ -60,11 +61,9 @@ qplot(sumDies, geom = "histogram", bins = 22) +
 
 The results of this histogram confirm our answer by showing that the frequency of the sum being 21 is, in fact, higher than the frequency of the sum being 22. 
 
-We will now create a line graph to track our calculated probabilities over every iteration and compare it with the tru probability values. We will first set the seed for our program using _set.seed()_. We will then initialize the **subsetProb1** and **subsetProb2** vectors using the _vector()_ function. These vectors will hold the calculated probabilities for every iteration. Note that every iteration's probability is calculated for that iteration as well as all iterations before it. This is done using a _for_ loop. For the _i_th index of **subsetProb1** and **subsetProb2**, we will calculate the mean for every value of sumDies from 1 to _i_ that meets each of our logic conditions using the _mean()_ function. Afterwards, we will use the _ggplot()_ function and specify the data as being from **subsetProb1** using the _data.frame()_ function. In addition, we will specify the _x_ values as being from 1 to **iterations**, which allows us to track every iteration. Afterwards, we will use the _geom\_line()_ function to plot the values of **subsetProb1** and **subsetProb1** as well as the true probability values, which are calculated using the expressions _\frac{20}{6^{4}}_ (for Prob1) and _\frac{10}{6^{4}}_ (for Prob2). 
+We will now create a line graph to track our calculated probabilities over every iteration and compare it with the true probability values. First, we initialize the **subsetProb1** and **subsetProb2** vectors using the _vector()_ function. These vectors will hold the calculated probabilities for every iteration. Note that every iteration's probability is calculated using all iterations before it. This is done using a _for_ loop. For the _i_th index of **subsetProb1** and **subsetProb2**, we will calculate the mean for every value of sumDies from 1 to _i_ that meets each of our logic conditions using the _mean()_ function. Afterwards, we will use the _ggplot()_ function and specify the _x_ axis as being from 1 to **iterations**. Then, we will use the _geom\_line()_ function to plot 4 lines: the values of **subsetProb1** and **subsetProb1**, as well as the true probability values, which are calculated using the expressions $\frac{20}{6^{4}}$ (for Prob1) and $\frac{10}{6^{4}}$ (for Prob2). See the source link for this problem to understand how to calculate the true theoretical probabilities.
 
 ```{r}
-set.seed(2)
-
 subsetProb1 = vector()
 subsetProb2 = vector()
 
@@ -73,16 +72,16 @@ for(i in 1:iterations){
   subsetProb2[i] = mean(sumDies[1:i] == sum2)
 }
 
-ggplot(data.frame(subsetProb1), aes(x = 1:iterations)) + 
+ggplot(data = NULL, aes(x = 1:iterations)) + 
   geom_line(aes(y=subsetProb1, color = "Prob1")) +
   geom_line(aes(y=subsetProb2, color = "Prob2")) + 
   geom_line(aes(y=(20/6^4), color = "trueProb1")) + 
   geom_line(aes(y=(10/6^4), color = "trueProb2")) +
-  ylab("Probability") +
-  xlab("Iterations")
+  ylab("Probability") + ggtitle("Estimated Probabilities over Iterations") +
+  theme(legend.title = element_blank()) +  xlab("Iterations")
 ```
 
-This line graph allows us to see how simulation can be used to estimate true probabilities. Using the _ggplot()_ and _geom\_line()_ functions, we can see that with very few iterations, random variation dominates the result and leaves us with inaccurate probabilities. However, as the number of iterations significantly increases, the calculated probability values converge to the true probabilities.
+This line graph allows us to see how simulation can be used to estimate true probabilities. We can see that with very few iterations, random variation dominates the result and leaves us with inaccurate probabilities. However, as the number of iterations significantly increases, the calculated probability values converge to the true probabilities.
 
 #Conclusion
 Thank you for taking the time to read this explanation for the dice problem from "Statistics 110: Strategic Practice & Homework 1", courtesy of Harvard University. Link: https://projects.iq.harvard.edu/files/stat110/files/strategic_practice_and_homework_1.pdf. This problem was taken from the public resources to the course and **is not my orginal work**. The explanation, however, is 100% original. Please feel free to visit my GitHub page at http://github.com/goutham1220 where I will be posting more explanations as well as other statistics and data science-related resources. In addition, please feel free to visit my YouTube channels "GSDataScience" (http://bit.ly/gsdatascience), where I will be posting more data science and statistics-related videos, and "Gooth" (http://youtube.com/gooth), where I post more cinematic-style, slice-of-life videos.    
