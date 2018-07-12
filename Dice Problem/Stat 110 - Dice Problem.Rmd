@@ -60,7 +60,7 @@ qplot(sumDies, geom = "histogram", bins = 22) +
 
 The results of this histogram confirm our answer by showing that the frequency of the sum being 21 is, in fact, higher than the frequency of the sum being 22. 
 
-We will now create a line graph to 
+We will now create a line graph to track our calculated probabilities over every iteration and compare it with the tru probability values. We will first set the seed for our program using _set.seed()_. We will then initialize the **subsetProb1** and **subsetProb2** vectors using the _vector()_ function. These vectors will hold the calculated probabilities for every iteration. Note that every iteration's probability is calculated for that iteration as well as all iterations before it. This is done using a _for_ loop. For the _i_th index of **subsetProb1** and **subsetProb2**, we will calculate the mean for every value of sumDies from 1 to _i_ that meets each of our logic conditions using the _mean()_ function. Afterwards, we will use the _ggplot()_ function and specify the data as being from **subsetProb1** using the _data.frame()_ function. In addition, we will specify the _x_ values as being from 1 to **iterations**, which allows us to track every iteration. Afterwards, we will use the _geom\_line()_ function to plot the values of **subsetProb1** and **subsetProb1** as well as the true probability values, which are calculated using the expressions _\frac{20}{6^{4}}_ (for Prob1) and _\frac{10}{6^{4}}_ (for Prob2). 
 
 ```{r}
 set.seed(2)
