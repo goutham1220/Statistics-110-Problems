@@ -7,24 +7,58 @@ output: pdf_document
 
 #Link: (https://projects.iq.harvard.edu/files/stat110/files/strategic_practice_and_homework_1.pdf)
  
-#Problem 1
+#Problem 
 
  Decide whether the blank should be filled in with =, <, or >, and give a short but clear explanation.
   * (probability that the total after rolling 4 fair dice is 21) ___ (probability that the total after rolling 4 fair dice is 22)
+  
+#Explanation
+ This problem involves determining whether the probability that the total summed values after rolling 4 fair dice is 21 is greater than, less than, or equal the probability that the total summed values after rolling 4 fair dice is 22. In order to solve this problem using simulation, we will need to do the following:
+  1.  Simulate _n_ iterations of 4 dice rolls and sum their values (n = 10,000)
+  2.  Count how many sums are equal to 21 and 22 to determine the probabilities of each outcome 
+  3.  Compare the calculated probabilities to answer the original questions  
+  
+In order to accomplish the first step, we will need to initialize variables for the two sums we will be comparing and the number of iterations as shown above. The **iterations** variable will be initialized to 10,000 because we want to simulate as many iterations as possible in order to obtain more accurate probabilities.
 
 ```{r}
 sum1 = 21
 sum2 = 22
 iterations = 10000
+```
 
+In addition, we will be creating 4 dice vectors to store the value of the die rolled for every iteration. For each **die** vector, we invoke the _sample_ function to generate _n_ values between 1 and 6 ( _n_ being the # of iterations). Afterwards, we create a **sumDies** vector that stores the sum of **die1**, **die2**, **die3**, and **die4** for each round.
+
+```{r}
+set.seed(2)
+die1 = sample(6, iterations, replace = TRUE)
+die2 = sample(6, iterations, replace = TRUE)
+die3 = sample(6, iterations, replace = TRUE)
+die4 = sample(6, iterations, replace = TRUE)
+sumDies = die1 + die2 + die3 + die4
+```
+
+Afterwards, the _mean()_ function is used to calculate the probability for each of the two sums. Inside of the _mean()_ function, we insert a logic condition to help determine the probability. Because the logic condition is evaluated for every index of the vector, the output will be a vector of TRUE and FALSE, which can also be represented as 1 and 0, respectively. As a result, the 1s represent when the sum of the dies equal the desired value (**sum1** and **sum2**) and 0s represent when they do not.This holds true for any value of **iterations** however, only larger numbers of iterations will yield accurate results. This is because in order to obtain more accurate probability values, we will need to run many simulations.
+
+```{r}
 prob1 = mean(sumDies == sum1)
 prob2 = mean(sumDies == sum2)
+c(prob1, prob2)
+```
 
-prob1 > prob2
+After running the program multiple times, we can see that the probability of the sum of 4 fair dice rolls being 21 is greater than the probability of the sum of 4 fair dice rolls being 22. Although the scope of the problem ends here, we will now  track the results after every iteration and plot them.
 
+
+```{r}
+set.seed(2)
 qplot(sumDies, geom = "histogram", bins = 22) +
   annotate("text", x = sum1, y = -iterations/100, label = "*", size = 15, color = 5) +
   annotate("text", x = sum2, y = -iterations/100, label = "*", size = 15, color = 4)
+```
+
+First, we will plot a histogram showing the frequency for the sum of 4 fair dice rolls between 1 and 25 using the _qplot()_ function. The \textcolor{teal}{teal} asterisk is used to denote when the sum is equal to 21 and the \textcolor{blue}{blue} asterisk is used to denote when the sum is equal to 22. The results of this histogram confirm our answer by showing that the frequency of the sum being 21 is, in fact, higher than the frequency of the sum being 22. 
+
+```{r}
+set.seed(2)
 
 subsetProb1 = vector()
 subsetProb2 = vector()
@@ -35,47 +69,13 @@ for(i in 1:iterations){
 }
 
 ggplot(data.frame(subsetProb1), aes(x = 1:iterations)) + 
-  geom_line(aes(y=subsetProb1, color = 5)) +
-  geom_line(aes(y=subsetProb2, color = 4))
+  geom_line(aes(y=subsetProb1, color = "Prob1")) +
+  geom_line(aes(y=subsetProb2, color = "Prob2")) + 
+  ylab("Probability") +
+  xlab("Iterations")
 ```
 
-#Explanation
- This problem involves determining whether the probability that the total summed values after rolling 4 fair dice is 21 is greater than, less than, or equal the probability that the total summed values after rolling 4 fair dice is 22. In order to solve this problem, we will need to do the following:
-  1.  Simulate _n_ iterations of 4 dice rolls and sum their values (n = 10,000)
-  2.  Calculate the means of the prob1 and prob2 vectors in order to determine the actual probabilities
-  3.  Compare the calculated probabilities to answer the original questions 
-
-```{r}
-sum1 = 21
-sum2 = 22
-iterations = 10000
-```
-
-In order to accomplish the first step, we will need to initialize variables for the two sums we will be comparing and the number of iterations as shown above. Although we could hard code these values, for the sake of proper convention, we will be creating variables to maximize customizability. The **iterations** variable will be initialized to 10,000 because we want the number of iterations to be high but not too high such that the program takes too long to run.    
-
-```{r}
-die1 = sample(6, iterations, replace = TRUE)
-die2 = sample(6, iterations, replace = TRUE)
-die3 = sample(6, iterations, replace = TRUE)
-die4 = sample(6, iterations, replace = TRUE)
-sumDies = die1 + die2 + die3 + die4
-```
-
-In addition, we will be creating 4 dice vectors to store the value for every iteration. For each **die** vector, we invoke the _sample_ function to generate _n_ values between 1 and 6 (_n_ being the # of iterations). Afterwards, we create a **sumDies** vector that stores the sum of **die1**, **die2**, **die3**, and **die4** for each round.
-
-```{r}
-prob1 = mean(sumDies == sum1)
-prob2 = mean(sumDies == sum2)
-```
-
-Afterwards, the _mean()_ function is used to calculate the probability for each of the two sums. Inside of the _mean()_ function, we insert a logic condition to help determine the probability. Because the logic condition is evaluated for every index of the vector, the output will be a vector of TRUE and FALSE, which can also be represented as 1 and 0, respectively. As a result, the 1s represent when the sum of the dies equal the desired value (**sum1** and **sum2**) and 0s represent when they do not. This holds true for any value of **iterations** however, only larger numbers of iterations will yield accurate results. This is because the smaller the value of **iterations** is, the more random variations dominate the results. 
-
-```{r}
-prob1 > prob2
-```
-
-After running the program multiple times, we can see, through this simple logic statement, that the probability of the sum of 4 fair dice rolls being 21 is greater than the probability of the sum of 4 fair dice rolls being 22. Although the scope of the problem ends here, we will now write a function to track the results after every iteration and plot them.
-
+This line graph allows us to see the benefit of many iterations. Using the _ggplot()_ and _geom\_line()_ functions, we can see that with very few iterations, random variation dominates the result and leaves us with inaccurate probabilities. However, as the number of iterations significantly increases, the calculated probability values become much more accurate and consistent.
 
 #Conclusion
 Thank you for taking the time to read this explanation for the dice problem from "Statistics 110: Strategic Practice & Homework 1", courtesy of Harvard University. Link: https://projects.iq.harvard.edu/files/stat110/files/strategic_practice_and_homework_1.pdf. This problem was taken from the public resources to the course and **is not my orginal work**. The explanation, however, is 100% original. Please feel free to visit my GitHub page at http://github.com/goutham1220 where I will be posting more explanations as well as other statistics and data science-related resources. In addition, please feel free to visit my YouTube channels "GSDataScience" (http://bit.ly/gsdatascience), where I will be posting more data science and statistics-related videos, and "Gooth" (http://youtube.com/gooth), where I post more cinematic-style, slice-of-life videos.    
